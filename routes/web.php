@@ -18,4 +18,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard/kategori', [CategoryController::class, 'index']);
+Route::get('/dashboard/kategori', [CategoryController::class, 'index'])->name('categories.index');
+Route::post('/dashboard/kategori', [CategoryController::class, 'store'])->name('categories.store');
+Route::get('/dashboard/kategori/cek-slug', [CategoryController::class, 'checkSlug'])->name('categories.checkSlug');
