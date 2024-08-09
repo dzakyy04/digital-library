@@ -241,6 +241,13 @@
                     position: 'top-right',
                 });
             @endif
+
+            @if (session()->has('error'))
+                let message = @json(session('error'));
+                NioApp.Toast(`<h5>Gagal</h5><p>${message}</p>`, 'error', {
+                    position: 'top-right',
+                });
+            @endif
         });
     </script>
 @endpush
