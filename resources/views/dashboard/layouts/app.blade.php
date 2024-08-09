@@ -36,8 +36,16 @@
         </div>
     </div>
     <!-- JavaScript -->
-    <script src="{{ asset('assets/js/bundle.js?ver=3.0.3') }}"></script>
-    <script src="{{ asset('assets/js/scripts.js?ver=3.0.3') }}"></script>
+    <script src="{{ asset('assets/js/bundle.js') }}"></script>
+    <script src="{{ asset('assets/js/scripts.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            const datatableWrap = $(".datatable-wrap");
+            const wrappingDiv = $("<div>").addClass("w-100").css("overflow-x", "scroll");
+            datatableWrap.children().appendTo(wrappingDiv);
+            datatableWrap.append(wrappingDiv);
+        });
+    </script>
     @stack('js')
 </body>
 
