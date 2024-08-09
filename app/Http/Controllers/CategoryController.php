@@ -47,6 +47,13 @@ class CategoryController extends Controller
         return redirect()->route('categories.index')->with('success', 'Kategori berhasil diperbarui');
     }
 
+    public function destroy($slug)
+    {
+        $category = Category::where('slug', $slug)->firstOrFail();
+        $category->delete();
+        return redirect()->route('categories.index')->with('success', 'Kategori berhasil dihapus');
+    }
+
     public function getCategory($slug)
     {
         $category = Category::where('slug', $slug)->firstOrFail();

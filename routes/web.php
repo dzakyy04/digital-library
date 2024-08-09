@@ -21,5 +21,6 @@ Route::get('/', function () {
 Route::get('/dashboard/kategori', [CategoryController::class, 'index'])->name('categories.index');
 Route::post('/dashboard/kategori', [CategoryController::class, 'store'])->name('categories.store');
 Route::put('/dashboard/kategori/{slug}', [CategoryController::class, 'update'])->name('categories.update');
+Route::delete('/dashboard/kategori/{slug}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 Route::get('/dashboard/kategori/cek-slug', [CategoryController::class, 'checkSlug'])->name('categories.checkSlug');
 Route::get('/dashboard/kategori/{slug}', [CategoryController::class, 'getCategory'])->name('categories.find');

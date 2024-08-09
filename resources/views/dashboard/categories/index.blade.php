@@ -141,6 +141,31 @@
             </div>
         </div>
     </div>
+
+    {{-- Delete Modal --}}
+    <div class="modal fade" id="deleteModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Hapus Kategori</h5>
+                    <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <form id="deleteForm" action="" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <p id="deleteText"></p>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger"><em
+                                    class="ni ni-trash me-1"></em>Hapus</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('js')
@@ -185,6 +210,26 @@
                                 ':slug', slug));
 
                         $('#editModal').modal('show');
+                    }
+                });
+            });
+
+            $('.delete-button').click(function() {
+                var slug = $(this).data('slug');
+
+                $.ajax({
+                    url: '{{ route('categories.find', ':slug') }}'.replace(':slug', slug),
+                    type: 'GET',
+                    success: function(response) {
+                        var category = response.category;
+
+                        $('#deleteModal').modal('show');
+                        $('#deleteForm').attr('action',
+                            "{{ route('categories.destroy', ':slug') }}"
+                            .replace(':slug', slug));
+                        $("#deleteText").text(
+                            "Apakah anda yakin ingin menghapus sarana dan prasarana " +
+                            category.name + "?");
                     }
                 });
             });
