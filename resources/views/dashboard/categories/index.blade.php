@@ -35,10 +35,11 @@
                                     <td>{{ $category->books_count }}</td>
                                     <td>
                                         <button type="button" class="btn btn-warning btn-xs rounded-pill edit-button"
-                                            data-id="">
+                                            data-slug="{{ $category->slug }}">
                                             <em class="ni ni-edit"></em>
                                         </button>
-                                        <button class="btn btn-danger btn-xs rounded-pill delete-button" data-id="">
+                                        <button class="btn btn-danger btn-xs rounded-pill delete-button"
+                                            data-slug="{{ $category->slug }}">
                                             <em class="ni ni-trash"></em>
                                         </button>
                                     </td>
@@ -95,6 +96,51 @@
             </div>
         </div>
     </div>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Kategori</h5>
+                    <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="form-group">
+                            <label class="form-label" for="edit_name">Nama</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                    name="name" id="edit_name" required>
+                                @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit_slug">Slug</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control @error('slug') is-invalid @enderror"
+                                    name="slug" id="edit_slug" required>
+                                @error('slug')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary"><em
+                                    class="ni ni-save me-1"></em>Perbarui</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('js')
@@ -120,14 +166,36 @@
                     }
                 });
             });
-        });
 
-        // Toastr
-        @if (session()->has('success'))
-            let message = @json(session('success'));
-            NioApp.Toast(`<h5>Berhasil</h5><p>${message}</p>`, 'success', {
-                position: 'top-right',
+            // Handle edit
+            $('.edit-button').on('click', function() {
+                var slug = $(this).data('slug');
+
+                $.ajax({
+                    url: '{{ route('categories.find', ':slug') }}'.replace(':slug', slug),
+                    type: 'GET',
+                    success: function(response) {
+                        var category = response.category;
+
+                        $('#edit_name').val(category.name);
+                        $('#edit_slug').val(category.slug);
+
+                        $('#editForm').attr('action',
+                            '{{ route('categories.update', ':slug') }}'.replace(
+                                ':slug', slug));
+
+                        $('#editModal').modal('show');
+                    }
+                });
             });
-        @endif
+
+            // Toastr
+            @if (session()->has('success'))
+                let message = @json(session('success'));
+                NioApp.Toast(`<h5>Berhasil</h5><p>${message}</p>`, 'success', {
+                    position: 'top-right',
+                });
+            @endif
+        });
     </script>
 @endpush

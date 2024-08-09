@@ -30,6 +30,31 @@ class CategoryController extends Controller
         return redirect()->route('categories.index')->with('success', 'Kategori berhasil ditambahkan');
     }
 
+    public function update(Request $request, $slug)
+    {
+        $request->validate([
+            'name' => 'required',
+            'slug' => 'required|unique:categories,slug,' . $slug . ',slug'
+        ]);
+
+        $category = Category::where('slug', $slug)->firstOrFail();
+
+        $category->update([
+            'name' => $request->name,
+            'slug' => $request->slug
+        ]);
+
+        return redirect()->route('categories.index')->with('success', 'Kategori berhasil diperbarui');
+    }
+
+    public function getCategory($slug)
+    {
+        $category = Category::where('slug', $slug)->firstOrFail();
+        return response()->json([
+            'category' => $category
+        ]);
+    }
+
     public function checkSlug(Request $request)
     {
         $slug = $request->input('slug');
