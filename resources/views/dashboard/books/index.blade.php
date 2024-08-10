@@ -11,9 +11,10 @@
                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#filterModal">
                         <em class="icon ni ni-filter me-2"></em>Filter
                     </button>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
-                        <em class="icon ni ni-plus"></em>Tambah Buku
-                    </button>
+                    <a href="{{ route('books.create') }}" class="btn btn-primary">
+                        <em class="icon ni ni-plus me-1"></em>Tambah Buku
+                    </a>
+
                 </div>
             </div>
 
@@ -37,7 +38,7 @@
                                 <tr class="align-middle">
                                     <td>{{ $index + 1 }}</td>
                                     <td><img src="{{ $book->cover_path }}" alt="{{ $book->title }}" class="img-thumbnail"
-                                            style="width: 100px;"></td>
+                                            style="width: 200px;"></td>
                                     <td>{{ $book->title }}</td>
                                     <td>{{ $book->category ? $book->category->name : '-' }}</td>
                                     <td>
@@ -111,3 +112,26 @@
         </div>
     </div>
 @endsection
+
+@push('js')
+    <script src="{{ asset('assets/js/example-toastr.js?ver=3.0.3') }}"></script>
+    <script>
+        $(document).ready(function() {
+            // Toastr
+            @if (session()->has('success'))
+                let message = @json(session('success'));
+                NioApp.Toast(`<h5>Berhasil</h5><p>${message}</p>`, 'success', {
+                    position: 'top-right',
+                });
+            @endif
+
+            @if (session()->has('error'))
+                let message = @json(session('error'));
+                NioApp.Toast(`<h5>Gagal</h5><p>${message}</p>`, 'error', {
+                    position: 'top-right',
+                });
+            @endif
+            c
+        });
+    </script>
+@endpush
