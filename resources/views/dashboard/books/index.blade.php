@@ -7,17 +7,31 @@
                 <div class="nk-block-head-content">
                     <h3 class="nk-block-title page-title">Buku Saya</h3>
                 </div>
-                <div class="nk-block-head-content">
-                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#exportModal">
-                        <em class="icon ni ni-download me-2"></em>Export
+                <div class="nk-block-head-content d-flex flex-wrap justify-content-end align-items-center">
+                    <div class="dropdown">
+                        <button class="btn btn-info dropdown-toggle me-1 me-sm-0" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <em class="icon ni ni-download me-1"></em>Export
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ route('books.export.pdf') }}"><em
+                                        class="icon ni ni-file-pdf me-1"></em>Export PDF</a></li>
+                            <li><a class="dropdown-item" href="{{ route('books.export.pdf.table') }}"><em
+                                        class="icon ni ni-file-pdf me-1"></em>Export PDF (Table)</a>
+                            </li>
+                            <li><a class="dropdown-item" href="{{ route('books.export.excel') }}"><em
+                                        class="icon ni ni-file-xls me-1"></em>Export Excel</a></li>
+                        </ul>
+                    </div>
+                    <button type="button" class="btn btn-secondary mx-md-1" data-bs-toggle="modal"
+                        data-bs-target="#filterModal">
+                        <em class="icon ni ni-filter me-1"></em>Filter
                     </button>
-                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#filterModal">
-                        <em class="icon ni ni-filter me-2"></em>Filter
-                    </button>
-                    <a href="{{ route('books.create') }}" class="btn btn-primary">
+                    <a href="{{ route('books.create') }}" class="btn btn-primary mt-1 mt-sm-0">
                         <em class="icon ni ni-plus me-1"></em>Tambah Buku
                     </a>
                 </div>
+
             </div>
 
             <div class="card card-bordered card-preview mt-3">
@@ -121,53 +135,6 @@
         </div>
     </div>
 
-    {{-- Export Modal --}}
-    <div class="modal fade" id="exportModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Export Buku</h5>
-                    <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <em class="icon ni ni-cross"></em>
-                    </a>
-                </div>
-                <div class="modal-body">
-                    <form id="exportForm" method="POST">
-                        @csrf
-                        <div class="form-group">
-                            <label class="fw-bold">Pilih Format Export</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="format" value="pdf_normal"
-                                    id="export_pdf_normal" checked>
-                                <label class="form-check-label" for="export_pdf_normal">
-                                    Export PDF (Biasa)
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="format" value="pdf_table"
-                                    id="export_pdf_table">
-                                <label class="form-check-label" for="export_pdf_table">
-                                    Export PDF (Table)
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="format" value="excel"
-                                    id="export_excel">
-                                <label class="form-check-label" for="export_excel">
-                                    Export Excel
-                                </label>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end mt-3">
-                            <button type="submit" class="btn btn-primary"><em class="ni ni-download me-1"></em>
-                                Export</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
     {{-- Delete Modal --}}
     <div class="modal fade" id="deleteModal">
         <div class="modal-dialog" role="document">
@@ -217,27 +184,6 @@
                             book.title + "?");
                     }
                 });
-            });
-
-            // Handle export
-            $('#exportForm').submit(function(event) {
-                event.preventDefault();
-                var selectedFormat = $('input[name="format"]:checked').val();
-                var actionUrl = '';
-
-                switch (selectedFormat) {
-                    case 'pdf_normal':
-                        actionUrl = '{{ route('books.export.pdf') }}';
-                        break;
-                    case 'pdf_table':
-                        actionUrl = '{{ route('books.export.pdf-table') }}';
-                        break;
-                    case 'excel':
-                        actionUrl = '{{ route('books.export.excel') }}';
-                        break;
-                }
-
-                $(this).attr('action', actionUrl).off('submit').submit();
             });
 
             // Toastr

@@ -55,7 +55,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::put('/buku/{slug}', [BookController::class, 'update'])->name('books.update');
     Route::delete('/buku/{slug}', [BookController::class, 'destroy'])->name('books.destroy');
     Route::get('/buku/{slug}', [BookController::class, 'getBook'])->name('books.find');
-    Route::post('/buku/export/pdf', [BookExportController::class, 'exportMyBookPdf'])->name('books.export.pdf');
-    Route::post('/buku/export/pdf-table', [BookExportController::class, 'exportMyBookPdfTable'])->name('books.export.pdf-table');
-    Route::post('/buku/export/excel', [BookExportController::class, 'exportMyBookExcel'])->name('books.export.excel');
+    Route::get('/buku/export/pdf', [BookExportController::class, 'exportMyBookPdf'])->name('books.export.pdf');
+    Route::get('/buku/export/pdf-table', [BookExportController::class, 'exportMyBookPdfTable'])->name('books.export.pdf.table');
+    Route::get('/buku/export/excel', [BookExportController::class, 'exportMyBookExcel'])->name('books.export.excel');
 });

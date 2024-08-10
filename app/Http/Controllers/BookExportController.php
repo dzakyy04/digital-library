@@ -13,7 +13,7 @@ class BookExportController extends Controller
     public function exportMyBookPdf()
     {
         $userId = Auth::user()->id;
-        $books = Book::where('user_id', $userId)->with('category')->get();
+        $books = Book::where('user_id', $userId)->with(['category', 'user'])->get();
         $books->transform(function ($book) {
             $filename = basename($book->cover_path);
             $book->cover_path = 'storage/books/covers/' . $filename;
@@ -28,7 +28,7 @@ class BookExportController extends Controller
     public function exportMyBookPdfTable()
     {
         $userId = Auth::user()->id;
-        $books = Book::where('user_id', $userId)->with('category')->get();
+        $books = Book::where('user_id', $userId)->with(['category', 'user'])->get();
         $books->transform(function ($book) {
             $filename = basename($book->cover_path);
             $book->cover_path = 'storage/books/covers/' . $filename;
@@ -43,7 +43,7 @@ class BookExportController extends Controller
     public function exportMyBookExcel()
     {
         $userId = Auth::user()->id;
-        $books = Book::where('user_id', $userId)->with('category')->get();
+        $books = Book::where('user_id', $userId)->with(['category', 'user'])->get();
 
         $data = $books->map(function ($book, $index) {
             return [
