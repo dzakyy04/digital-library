@@ -9,7 +9,7 @@
                 </div>
                 <div class="nk-block-head-content">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
-                        <em class="icon ni ni-plus me-1"></em>Tambah Kategori</span>
+                        <em class="icon ni ni-plus me-1"></em>Tambah Kategori
                     </button>
                 </div>
             </div>
@@ -171,24 +171,32 @@
     <script>
         $(document).ready(function() {
             // Handle slug
-            $('#name').on('input', function() {
-                var name = $(this).val();
-                var slug = name.toLowerCase().replace(/\s+/g, '-');
+            function handleSlugGeneration(nameInput, slugInput) {
+                $(nameInput).on('input', function() {
+                    var name = $(this).val();
+                    var slug = name.toLowerCase().replace(/\s+/g, '-');
 
-                $.ajax({
-                    url: '{{ route('categories.checkSlug') }}',
-                    type: 'GET',
-                    data: {
-                        slug: slug
-                    },
-                    success: function(response) {
-                        if (response.exists) {
-                            slug = slug + '-' + (response.count + 1);
+                    $.ajax({
+                        url: '{{ route('categories.checkSlug') }}',
+                        type: 'GET',
+                        data: {
+                            slug: slug
+                        },
+                        success: function(response) {
+                            if (response.exists) {
+                                slug = slug + '-' + (response.count + 1);
+                            }
+                            $(slugInput).val(slug);
                         }
-                        $('#slug').val(slug);
-                    }
+                    });
                 });
-            });
+            }
+
+            // Handle slug for add modal
+            handleSlugGeneration('#name', '#slug');
+
+            // Handle slug for edit modal
+            handleSlugGeneration('#edit_name', '#edit_slug');
 
             // Handle edit
             $('.edit-button').on('click', function() {
