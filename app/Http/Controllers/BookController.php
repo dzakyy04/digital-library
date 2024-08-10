@@ -94,6 +94,59 @@ class BookController extends Controller
         }
     }
 
+    public function edit($slug)
+    {
+        $title = 'Edit Buku';
+        $book = Book::where('slug', $slug)->firstOrFail();
+        if (Auth::id() !== $book->user_id) {
+            return redirect()->route('books.index')->with('error', 'Anda tidak memiliki izin untuk mengedit buku ini');
+        }
+        $categories = Category::orderBy('name')->get();
+        return view('dashboard.books.edit', compact('title', 'book', 'categories'));
+    }
+
+    public function update(Request $request, $slug)
+    {
+        try {
+            $book = Book::where('slug', $slug)->firstOrFail();
+            if (Auth::id() !== $book->user_id) {
+                return redirect()->route('books.index')->with('error', 'Anda tidak memiliki izin untuk mengedit buku ini');
+            }
+
+            $book = $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'category_id' => 'required|exists:categories,id',
+                'quantity' => 'required|integer|min:0',
+            ]);
+
+            $book['slug'] = $this->generateUniqueSlug($request->title);
+            $book['user_id'] = Auth::user()->id;
+
+            if ($request->hasFile('file_path')) {
+                $fileName = $book['slug'] . '-' . time() . '.' . $request->file_path->getClientOriginalExtension();
+                $filePath = $request->file_path->storeAs('books/files', $fileName, 'public');
+                $book['file_path'] = url(Storage::url($filePath));
+            }
+
+            if ($request->hasFile('cover_path')) {
+                $coverName = $book['slug'] . '-' . time() . '.' . $request->cover_path->getClientOriginalExtension();
+                $coverPath = $request->cover_path->storeAs('books/covers', $coverName, 'public');
+                $book['cover_path'] = url(Storage::url($coverPath));
+            }
+
+            $book = Book::where('slug', $slug)->update($book);
+
+            return redirect()->route('books.index')->with('success', 'Buku berhasil diperbarui');
+        } catch (ValidationException $e) {
+            return back()->withErrors($e->errors())
+                ->with('error', 'Terjadi kesalahan dalam validasi. Silakan periksa data yang Anda masukkan')
+                ->withInput();
+        } catch (Exception $e) {
+            return redirect()->route('books.edit', $slug)->with('error', $e->getMessage());
+        }
+    }
+
     public function destroy($slug)
     {
         try {

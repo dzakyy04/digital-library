@@ -49,6 +49,8 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::get('/buku/{slug}/download', [BookController::class, 'download'])->name('books.download');
     Route::get('/buku/tambah', [BookController::class, 'create'])->name('books.create');
     Route::post('/buku/tambah', [BookController::class, 'store'])->name('books.store');
+    Route::get('/buku/{slug}/edit', [BookController::class, 'edit'])->name('books.edit');
+    Route::put('/buku/{slug}', [BookController::class, 'update'])->name('books.update');
     Route::delete('/buku/{slug}', [BookController::class, 'destroy'])->name('books.destroy');
     Route::get('/buku/{slug}', [BookController::class, 'getBook'])->name('books.find');
 });

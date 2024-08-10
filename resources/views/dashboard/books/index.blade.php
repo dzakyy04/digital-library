@@ -54,10 +54,9 @@
                                             data-slug="{{ $book->slug }}">
                                             <em class="ni ni-eye"></em>
                                         </button>
-                                        <button type="button" class="btn btn-warning btn-xs rounded-pill edit-button"
-                                            data-slug="{{ $book->slug }}">
+                                        <a href="{{ route('books.edit', $book->slug) }}" type="button" class="btn btn-warning btn-xs rounded-pill">
                                             <em class="ni ni-edit"></em>
-                                        </button>
+                                        </a>
                                         <button class="btn btn-danger btn-xs rounded-pill delete-button"
                                             data-slug="{{ $book->slug }}">
                                             <em class="ni ni-trash"></em>
