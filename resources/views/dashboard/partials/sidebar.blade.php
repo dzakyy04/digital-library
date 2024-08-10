@@ -18,7 +18,7 @@
             <div class="nk-sidebar-menu" data-simplebar>
                 <ul class="nk-menu">
                     <li class="nk-menu-item has-sub">
-                        <a href="" class="nk-menu-link">
+                        <a href="{{ route('dashboard') }}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-dashboard"></em></span>
                             <span class="nk-menu-text">Dashboard</span>
                         </a>
@@ -30,7 +30,7 @@
                         </a>
                     </li>
                     <li class="nk-menu-item has-sub">
-                        <a href="" class="nk-menu-link">
+                        <a href="{{ route('categories.index') }}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-folders"></em></span>
                             <span class="nk-menu-text">Kategori</span>
                         </a>

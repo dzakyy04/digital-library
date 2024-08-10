@@ -20,8 +20,9 @@
                                     <em class="icon ni ni-user-alt"></em>
                                 </div>
                                 <div class="user-info d-none d-xl-block">
-                                    <div class="user-status">Admin</div>
-                                    <div class="user-name dropdown-indicator">Rimuru Tempest</div>
+                                    <div class="user-status">{{ Auth::user()->role == 'user' ? 'Pengguna' : 'Admin' }}
+                                    </div>
+                                    <div class="user-name dropdown-indicator">{{ Auth::user()->name }}</div>
                                 </div>
                             </div>
                         </a>
@@ -32,8 +33,8 @@
                                         <em class="icon ni ni-user-alt"></em>
                                     </div>
                                     <div class="user-info">
-                                        <span class="lead-text">Rimuru Tempest</span>
-                                        <span class="sub-text">rimuru@gmail.com</span>
+                                        <span class="lead-text">{{ Auth::user()->name }}</span>
+                                        <span class="sub-text">{{ Auth::user()->email }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -58,9 +59,9 @@
                                     <li>
                                         <a href="#" id="logout-link">
                                             <em class="icon ni ni-signout"></em>
-                                            <span>Logout</span>
+                                            <span>Keluar</span>
                                         </a>
-                                        <form id="logout-form" action="" method="POST"
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
                                             style="display: none;">
                                             @csrf
                                         </form>
