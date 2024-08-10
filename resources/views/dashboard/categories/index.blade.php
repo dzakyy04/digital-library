@@ -87,9 +87,8 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="modal-footer">
+                        <div class="d-flex justify-content-end mt-3">
                             <button type="submit" class="btn btn-primary"><em class="ni ni-save me-1"></em>Simpan</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                         </div>
                     </form>
                 </div>
@@ -131,10 +130,9 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="modal-footer">
+                        <div class="d-flex justify-content-end mt-3">
                             <button type="submit" class="btn btn-primary"><em
                                     class="ni ni-save me-1"></em>Perbarui</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                         </div>
                     </form>
                 </div>
@@ -157,7 +155,7 @@
                         @csrf
                         @method('DELETE')
                         <p id="deleteText"></p>
-                        <div class="modal-footer">
+                        <div class="d-flex justify-content-end mt-3">
                             <button type="submit" class="btn btn-danger"><em
                                     class="ni ni-trash me-1"></em>Hapus</button>
                         </div>
@@ -214,6 +212,7 @@
                 });
             });
 
+            // Handle delete
             $('.delete-button').click(function() {
                 var slug = $(this).data('slug');
 
@@ -228,7 +227,7 @@
                             "{{ route('categories.destroy', ':slug') }}"
                             .replace(':slug', slug));
                         $("#deleteText").text(
-                            "Apakah anda yakin ingin menghapus sarana dan prasarana " +
+                            "Apakah anda yakin ingin menghapus kategori " +
                             category.name + "?");
                     }
                 });
