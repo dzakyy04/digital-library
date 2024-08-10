@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BookController;
 use App\Http\Controllers\CategoryController;
 
 /*
@@ -43,4 +44,6 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::delete('/kategori/{slug}', [CategoryController::class, 'destroy'])->name('categories.destroy');
     Route::get('/kategori/cek-slug', [CategoryController::class, 'checkSlug'])->name('categories.checkSlug');
     Route::get('/kategori/{slug}', [CategoryController::class, 'getCategory'])->name('categories.find');
+    // Book routes
+    Route::get('/buku', [BookController::class, 'index'])->name('books.index');
 });

@@ -24,7 +24,7 @@
                         </a>
                     </li>
                     <li class="nk-menu-item has-sub">
-                        <a href="" class="nk-menu-link">
+                        <a href="{{ route('books.index') }}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-book"></em></span>
                             <span class="nk-menu-text">Buku</span>
                         </a>
