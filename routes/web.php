@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\BookExportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,4 +54,6 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::put('/buku/{slug}', [BookController::class, 'update'])->name('books.update');
     Route::delete('/buku/{slug}', [BookController::class, 'destroy'])->name('books.destroy');
     Route::get('/buku/{slug}', [BookController::class, 'getBook'])->name('books.find');
+    Route::post('/buku/export/pdf', [BookExportController::class, 'exportMyBook'])->name('books.export.pdf');
+    Route::post('/buku/export/pdf-table', [BookExportController::class, 'exportMyBookTable'])->name('books.export.pdf-table');
 });
