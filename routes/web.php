@@ -46,6 +46,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::get('/kategori/{slug}', [CategoryController::class, 'getCategory'])->name('categories.find');
     // Book routes
     Route::get('/buku', [BookController::class, 'index'])->name('books.index');
+    Route::get('/buku/{slug}/download', [BookController::class, 'download'])->name('books.download');
     Route::get('/buku/tambah', [BookController::class, 'create'])->name('books.create');
     Route::post('/buku/tambah', [BookController::class, 'store'])->name('books.store');
 });

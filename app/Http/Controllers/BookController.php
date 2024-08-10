@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class BookController extends Controller
 {
@@ -90,6 +91,31 @@ class BookController extends Controller
                 ->withInput();
         } catch (Exception $e) {
             return redirect()->route('books.create')->with('error', $e->getMessage());
+        }
+    }
+
+    public function download($slug)
+    {
+        try {
+            $book = Book::where('slug', $slug)->firstOrFail();
+
+            if (Auth::id() !== $book->user_id) {
+                return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengunduh buku ini.');
+            }
+
+            $fileName = basename($book->file_path);
+
+            $filePath = storage_path('app/public/books/files/' . $fileName);
+
+            if (!file_exists($filePath)) {
+                return redirect()->back()->with('error', 'File tidak ditemukan.');
+            }
+
+            return response()->download($filePath, $fileName);
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('books.index')->with('error', 'Buku tidak ditemukan.');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengunduh file.');
         }
     }
 

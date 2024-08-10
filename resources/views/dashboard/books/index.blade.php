@@ -46,9 +46,10 @@
                                     </td>
                                     <td>{{ $book->quantity }}</td>
                                     <td>
-                                        <button type="button" class="btn btn-success btn-xs rounded-pill download-button">
+                                        <a href="{{ route('books.download', $book->slug) }}"
+                                            class="btn btn-success btn-xs rounded-pill download-button">
                                             <em class="ni ni-download"></em>
-                                        </button>
+                                        </a>
                                         <button type="button" class="btn btn-primary btn-xs rounded-pill show-button"
                                             data-slug="{{ $book->slug }}">
                                             <em class="ni ni-eye"></em>
