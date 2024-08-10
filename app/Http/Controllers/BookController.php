@@ -84,13 +84,42 @@ class BookController extends Controller
 
             Book::create($book);
 
-            return redirect()->route('books.index')->with('success', 'Buku berhasil ditambahkan.');
+            return redirect()->route('books.index')->with('success', 'Buku berhasil ditambahkan');
         } catch (ValidationException $e) {
             return back()->withErrors($e->errors())
-                ->with('error', 'Terjadi kesalahan dalam validasi. Silakan periksa data yang Anda masukkan.')
+                ->with('error', 'Terjadi kesalahan dalam validasi. Silakan periksa data yang Anda masukkan')
                 ->withInput();
         } catch (Exception $e) {
             return redirect()->route('books.create')->with('error', $e->getMessage());
+        }
+    }
+
+    public function destroy($slug)
+    {
+        try {
+            $book = Book::where('slug', $slug)->firstOrFail();
+
+            if (Auth::id() !== $book->user_id) {
+                return redirect()->route('books.index')->with('error', 'Anda tidak memiliki izin untuk menghapus buku ini');
+            }
+
+            if ($book->file_path) {
+                $filePath = str_replace(url('/'), '', parse_url($book->file_path, PHP_URL_PATH));
+                Storage::disk('public')->delete($filePath);
+            }
+
+            if ($book->cover_path) {
+                $coverPath = str_replace(url('/'), '', parse_url($book->cover_path, PHP_URL_PATH));
+                Storage::disk('public')->delete($coverPath);
+            }
+
+            $book->delete();
+
+            return redirect()->route('books.index')->with('success', 'Buku berhasil dihapus');
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('books.index')->with('error', 'Buku tidak ditemukan');
+        } catch (Exception $e) {
+            return redirect()->route('books.index')->with('error', 'Terjadi kesalahan saat menghapus buku');
         }
     }
 
@@ -100,7 +129,7 @@ class BookController extends Controller
             $book = Book::where('slug', $slug)->firstOrFail();
 
             if (Auth::id() !== $book->user_id) {
-                return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengunduh buku ini.');
+                return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengunduh buku ini');
             }
 
             $fileName = basename($book->file_path);
@@ -108,14 +137,32 @@ class BookController extends Controller
             $filePath = storage_path('app/public/books/files/' . $fileName);
 
             if (!file_exists($filePath)) {
-                return redirect()->back()->with('error', 'File tidak ditemukan.');
+                return redirect()->back()->with('error', 'File tidak ditemukan');
             }
 
             return response()->download($filePath, $fileName);
         } catch (ModelNotFoundException $e) {
-            return redirect()->route('books.index')->with('error', 'Buku tidak ditemukan.');
+            return redirect()->route('books.index')->with('error', 'Buku tidak ditemukan');
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengunduh file.');
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengunduh file');
+        }
+    }
+
+    public function getBook($slug)
+    {
+        try {
+            $book = Book::where('slug', $slug)->firstOrFail();
+            if (Auth::id() !== $book->user_id) {
+                return response()->json([
+                    'error' => 'Anda tidak memiliki izin untuk melihat buku ini'
+                ], 403);
+            }
+
+            return response()->json([
+                'book' => $book
+            ]);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Buku tidak ditemukan'], 404);
         }
     }
 

@@ -112,12 +112,57 @@
             </div>
         </div>
     </div>
+
+    {{-- Delete Modal --}}
+    <div class="modal fade" id="deleteModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Hapus Buku</h5>
+                    <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <form id="deleteForm" action="" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <p id="deleteText"></p>
+                        <div class="d-flex justify-content-end mt-3">
+                            <button type="submit" class="btn btn-danger"><em class="ni ni-trash me-1"></em>Hapus</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('js')
     <script src="{{ asset('assets/js/example-toastr.js?ver=3.0.3') }}"></script>
     <script>
         $(document).ready(function() {
+            // Handle delete
+            $('.delete-button').click(function() {
+                var slug = $(this).data('slug');
+
+                $.ajax({
+                    url: '{{ route('books.find', ':slug') }}'.replace(':slug', slug),
+                    type: 'GET',
+                    success: function(response) {
+                        var book = response.book;
+
+                        $('#deleteModal').modal('show');
+                        $('#deleteForm').attr('action',
+                            "{{ route('books.destroy', ':slug') }}"
+                            .replace(':slug', slug));
+                        $("#deleteText").text(
+                            "Apakah anda yakin ingin menghapus buku " +
+                            book.title + "?");
+                    }
+                });
+            });
+
             // Toastr
             @if (session()->has('success'))
                 let message = @json(session('success'));
@@ -132,7 +177,6 @@
                     position: 'top-right',
                 });
             @endif
-            c
         });
     </script>
 @endpush
