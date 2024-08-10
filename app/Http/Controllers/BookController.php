@@ -109,33 +109,40 @@ class BookController extends Controller
     {
         try {
             $book = Book::where('slug', $slug)->firstOrFail();
+
             if (Auth::id() !== $book->user_id) {
                 return redirect()->route('books.index')->with('error', 'Anda tidak memiliki izin untuk mengedit buku ini');
             }
 
-            $book = $request->validate([
+            $validatedData = $request->validate([
                 'title' => 'required|string|max:255',
                 'description' => 'required|string',
                 'category_id' => 'required|exists:categories,id',
                 'quantity' => 'required|integer|min:0',
             ]);
 
-            $book['slug'] = $this->generateUniqueSlug($request->title);
-            $book['user_id'] = Auth::user()->id;
+            $validatedData['slug'] = $this->generateUniqueSlug($request->title);
+            $validatedData['user_id'] = Auth::user()->id;
 
             if ($request->hasFile('file_path')) {
-                $fileName = $book['slug'] . '-' . time() . '.' . $request->file_path->getClientOriginalExtension();
+                if ($book->file_path) {
+                    Storage::disk('public')->delete('books/files/' . basename($book->file_path));
+                }
+                $fileName = $validatedData['slug'] . '-' . time() . '.' . $request->file_path->getClientOriginalExtension();
                 $filePath = $request->file_path->storeAs('books/files', $fileName, 'public');
-                $book['file_path'] = url(Storage::url($filePath));
+                $validatedData['file_path'] = url(Storage::url($filePath));
             }
 
             if ($request->hasFile('cover_path')) {
-                $coverName = $book['slug'] . '-' . time() . '.' . $request->cover_path->getClientOriginalExtension();
+                if ($book->cover_path) {
+                    Storage::disk('public')->delete('books/covers/' . basename($book->cover_path));
+                }
+                $coverName = $validatedData['slug'] . '-' . time() . '.' . $request->cover_path->getClientOriginalExtension();
                 $coverPath = $request->cover_path->storeAs('books/covers', $coverName, 'public');
-                $book['cover_path'] = url(Storage::url($coverPath));
+                $validatedData['cover_path'] = url(Storage::url($coverPath));
             }
 
-            $book = Book::where('slug', $slug)->update($book);
+            $book->update($validatedData);
 
             return redirect()->route('books.index')->with('success', 'Buku berhasil diperbarui');
         } catch (ValidationException $e) {
@@ -143,7 +150,7 @@ class BookController extends Controller
                 ->with('error', 'Terjadi kesalahan dalam validasi. Silakan periksa data yang Anda masukkan')
                 ->withInput();
         } catch (Exception $e) {
-            return redirect()->route('books.edit', $slug)->with('error', $e->getMessage());
+            return redirect()->route('books.edit', $slug)->with('error', 'Terjadi kesalahan saat memperbarui buku');
         }
     }
 
@@ -157,13 +164,11 @@ class BookController extends Controller
             }
 
             if ($book->file_path) {
-                $filePath = str_replace(url('/'), '', parse_url($book->file_path, PHP_URL_PATH));
-                Storage::disk('public')->delete($filePath);
+                Storage::disk('public')->delete('books/files/' . basename($book->file_path));
             }
 
             if ($book->cover_path) {
-                $coverPath = str_replace(url('/'), '', parse_url($book->cover_path, PHP_URL_PATH));
-                Storage::disk('public')->delete($coverPath);
+                Storage::disk('public')->delete('books/covers/' . basename($book->cover_path));
             }
 
             $book->delete();

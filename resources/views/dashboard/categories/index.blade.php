@@ -15,33 +15,36 @@
             </div>
             <div class="card card-bordered card-preview mt-3">
                 <div class="card-inner">
-                    <table class="datatable-init nk-tb-list nk-tb-ulist table table-hover table-responsive-md"
+                    <table class="datatable-init nk-tb-list nk-tb-ulist table table-hover table-bordered table-responsive-md"
                         data-auto-responsive="false">
                         <thead>
                             <tr class="table-light nk-tb-item nk-tb-head">
-                                <th class="text-nowrap">No</th>
-                                <th class="text-nowrap">Nama</th>
-                                <th class="text-nowrap">Slug</th>
-                                <th class="text-nowrap">Jumlah</th>
-                                <th class="text-nowrap no-export">Aksi</th>
+                                <th class="text-nowrap text-center">No</th>
+                                <th class="text-nowrap text-center">Nama</th>
+                                <th class="text-nowrap text-center">Slug</th>
+                                <th class="text-nowrap text-center">Jumlah</th>
+                                <th class="text-nowrap text-center no-export">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($categories as $index => $category)
                                 <tr class="align-middle">
-                                    <td>{{ $index + 1 }}</td>
+                                    <td class="text-center">{{ $index + 1 }}</td>
                                     <td>{{ $category->name }}</td>
                                     <td>{{ $category->slug }}</td>
-                                    <td>{{ $category->books_count }}</td>
-                                    <td>
-                                        <button type="button" class="btn btn-warning btn-xs rounded-pill edit-button"
-                                            data-slug="{{ $category->slug }}">
-                                            <em class="ni ni-edit"></em>
-                                        </button>
-                                        <button class="btn btn-danger btn-xs rounded-pill delete-button"
-                                            data-slug="{{ $category->slug }}">
-                                            <em class="ni ni-trash"></em>
-                                        </button>
+                                    <td class="text-center">{{ $category->books_count }}</td>
+                                    <td class="text-center">
+                                        <div>
+                                            <button type="button" class="btn btn-warning btn-xs rounded-pill edit-button"
+                                                data-slug="{{ $category->slug }}" title="Edit Kategori">
+                                                <em class="ni ni-edit"></em>
+                                            </button>
+                                            <button class="btn btn-danger btn-xs rounded-pill delete-button"
+                                                data-slug="{{ $category->slug }}" title="Hapus Kategori">
+                                                <em class="ni ni-trash"></em>
+                                            </button>
+
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

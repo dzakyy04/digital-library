@@ -20,47 +20,55 @@
 
             <div class="card card-bordered card-preview mt-3">
                 <div class="card-inner">
-                    <table class="datatable-init nk-tb-list nk-tb-ulist table table-hover table-responsive-md"
+                    <table
+                        class="datatable-init nk-tb-list nk-tb-ulist table table-hover table-bordered table-responsive-md"
                         data-auto-responsive="false">
                         <thead>
                             <tr class="table-light nk-tb-item nk-tb-head">
-                                <th class="text-nowrap">No</th>
-                                <th class="text-nowrap">Cover</th>
-                                <th class="text-nowrap">Judul</th>
-                                <th class="text-nowrap">Kategori</th>
-                                <th class="text-nowrap">Deskripsi</th>
-                                <th class="text-nowrap">Jumlah</th>
-                                <th class="text-nowrap no-export">Aksi</th>
+                                <th class="text-nowrap text-center">No</th>
+                                <th class="text-nowrap text-center">Cover</th>
+                                <th class="text-nowrap text-center">Judul</th>
+                                <th class="text-nowrap text-center">Kategori</th>
+                                <th class="text-nowrap text-center">Deskripsi</th>
+                                <th class="text-nowrap text-center">Jumlah</th>
+                                <th class="text-nowrap text-center no-export">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($books as $index => $book)
                                 <tr class="align-middle">
-                                    <td>{{ $index + 1 }}</td>
-                                    <td><img src="{{ $book->cover_path }}" alt="{{ $book->title }}" class="img-thumbnail"
-                                            style="width: 200px;"></td>
+                                    <td class="text-center">{{ $index + 1 }}</td>
+                                    <td class="text-center">
+                                        <img src="{{ $book->cover_path }}" alt="{{ $book->title }}" class="img-thumbnail"
+                                            style="max-height: 150px; max-width: 100px;">
+                                    </td>
                                     <td>{{ $book->title }}</td>
                                     <td>{{ $book->category ? $book->category->name : '-' }}</td>
                                     <td>
                                         {{ Str::words($book->description, 20, '...') }}
                                     </td>
-                                    <td>{{ $book->quantity }}</td>
-                                    <td>
-                                        <a href="{{ route('books.download', $book->slug) }}"
-                                            class="btn btn-success btn-xs rounded-pill download-button">
-                                            <em class="ni ni-download"></em>
-                                        </a>
-                                        <button type="button" class="btn btn-primary btn-xs rounded-pill show-button"
-                                            data-slug="{{ $book->slug }}">
-                                            <em class="ni ni-eye"></em>
-                                        </button>
-                                        <a href="{{ route('books.edit', $book->slug) }}" type="button" class="btn btn-warning btn-xs rounded-pill">
-                                            <em class="ni ni-edit"></em>
-                                        </a>
-                                        <button class="btn btn-danger btn-xs rounded-pill delete-button"
-                                            data-slug="{{ $book->slug }}">
-                                            <em class="ni ni-trash"></em>
-                                        </button>
+                                    <td class="text-center">{{ $book->quantity }}</td>
+                                    <td class="text-center">
+                                        <div>
+                                            <a href="{{ route('books.download', $book->slug) }}"
+                                                class="btn btn-success btn-xs rounded-pill download-button"
+                                                title="Download Buku">
+                                                <em class="ni ni-download"></em>
+                                            </a>
+                                            <button type="button" class="btn btn-primary btn-xs rounded-pill show-button"
+                                                data-slug="{{ $book->slug }}" title="Lihat Detail Buku">
+                                                <em class="ni ni-eye"></em>
+                                            </button>
+                                            <a href="{{ route('books.edit', $book->slug) }}" type="button"
+                                                class="btn btn-warning btn-xs rounded-pill" title="Edit Buku">
+                                                <em class="ni ni-edit"></em>
+                                            </a>
+                                            <button class="btn btn-danger btn-xs rounded-pill delete-button"
+                                                data-slug="{{ $book->slug }}" title="Hapus Buku">
+                                                <em class="ni ni-trash"></em>
+                                            </button>
+                                        </div>
+
                                     </td>
                                 </tr>
                             @endforeach
@@ -128,7 +136,8 @@
                         @method('DELETE')
                         <p id="deleteText"></p>
                         <div class="d-flex justify-content-end mt-3">
-                            <button type="submit" class="btn btn-danger"><em class="ni ni-trash me-1"></em>Hapus</button>
+                            <button type="submit" class="btn btn-danger"><em
+                                    class="ni ni-trash me-1"></em>Hapus</button>
                         </div>
                     </form>
                 </div>
