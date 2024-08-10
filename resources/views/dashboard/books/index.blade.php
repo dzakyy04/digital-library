@@ -232,6 +232,9 @@
                     case 'pdf_table':
                         actionUrl = '{{ route('books.export.pdf-table') }}';
                         break;
+                    case 'excel':
+                        actionUrl = '{{ route('books.export.excel') }}';
+                        break;
                 }
 
                 $(this).attr('action', actionUrl).off('submit').submit();
