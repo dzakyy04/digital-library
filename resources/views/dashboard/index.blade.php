@@ -72,7 +72,7 @@
                             "{{ route('categories.destroy', ':slug') }}"
                             .replace(':slug', slug));
                         $("#deleteText").text(
-                            "Apakah anda yakin ingin menghapus sarana dan prasarana " +
+                            "Apakah anda yakin ingin menghapus kategori " +
                             category.name + "?");
                     }
                 });
