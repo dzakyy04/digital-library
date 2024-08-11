@@ -6,6 +6,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\ExcelController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BookExportController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,7 @@ Route::middleware('guest')->group(function () {
     // Register routes
     Route::get('/daftar', [AuthController::class, 'showRegisterForm'])->name('register.view');
     Route::post('/daftar', [AuthController::class, 'register'])->name('register');
+
     // Login routes
     Route::get('/masuk', [AuthController::class, 'showLoginForm'])->name('login.view');
     Route::post('/masuk', [AuthController::class, 'login'])->name('login');
@@ -34,11 +36,10 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->prefix('dashboard')->group(function () {
     // Logout route
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
     // Dashboard routes
-    Route::get('/', function () {
-        $title = 'Dashboard';
-        return view('dashboard.index', compact('title'));
-    })->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
     // Category routes
     Route::get('/kategori', [CategoryController::class, 'index'])->name('categories.index');
     Route::post('/kategori', [CategoryController::class, 'store'])->name('categories.store');
@@ -46,6 +47,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::delete('/kategori/{slug}', [CategoryController::class, 'destroy'])->name('categories.destroy');
     Route::get('/kategori/cek-slug', [CategoryController::class, 'checkSlug'])->name('categories.checkSlug');
     Route::get('/kategori/{slug}', [CategoryController::class, 'getCategory'])->name('categories.find');
+
     // Book routes
     Route::get('/buku', [BookController::class, 'index'])->name('books.index');
     Route::get('/semua-buku', [BookController::class, 'all'])->name('books.all');
