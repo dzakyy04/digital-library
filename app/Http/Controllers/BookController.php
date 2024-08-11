@@ -8,6 +8,7 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -50,6 +51,10 @@ class BookController extends Controller
 
     public function all(Request $request)
     {
+        if (!Gate::allows('admin-access')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         try {
             $title = 'Daftar Buku';
 

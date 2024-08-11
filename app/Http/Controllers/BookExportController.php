@@ -6,6 +6,7 @@ use App\Models\Book;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Rap2hpoutre\FastExcel\FastExcel;
 
 class BookExportController extends Controller
@@ -57,6 +58,10 @@ class BookExportController extends Controller
 
     public function exportAllBooksPdf()
     {
+        if (!Gate::allows('admin-access')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $books = Book::with(['category', 'user'])->get();
         $books->transform(function ($book) {
             $filename = basename($book->cover_path);
@@ -71,6 +76,10 @@ class BookExportController extends Controller
 
     public function exportAllBooksPdfTable()
     {
+        if (!Gate::allows('admin-access')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $books = Book::with(['category', 'user'])->get();
         $pdf = Pdf::loadView('exports.pdf.all-books-table', compact('books'));
 
@@ -79,6 +88,10 @@ class BookExportController extends Controller
 
     public function exportAllBooksExcel()
     {
+        if (!Gate::allows('admin-access')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $books = Book::with(['category', 'user'])->get();
 
         $data = $books->map(function ($book, $index) {

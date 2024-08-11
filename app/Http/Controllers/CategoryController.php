@@ -2,13 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Exception;
+use Illuminate\Support\Facades\Gate;
 
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (!Gate::allows('admin-access')) {
+                abort(403, 'Unauthorized action.');
+            }
+            return $next($request);
+        });
+    }
+
     public function index()
     {
         try {

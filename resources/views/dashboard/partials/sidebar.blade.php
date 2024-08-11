@@ -32,21 +32,23 @@
                             <span class="nk-menu-text">Buku Saya</span>
                         </a>
                     </li>
-                    <li class="nk-menu-heading">
-                        <h6 class="overline-title text-primary-alt">Admin</h6>
-                    </li>
-                    <li class="nk-menu-item has-sub">
-                        <a href="{{ route('books.all') }}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-book"></em></span>
-                            <span class="nk-menu-text">Semua Buku</span>
-                        </a>
-                    </li>
-                    <li class="nk-menu-item has-sub">
-                        <a href="{{ route('categories.index') }}" class="nk-menu-link">
-                            <span class="nk-menu-icon"><em class="icon ni ni-folders"></em></span>
-                            <span class="nk-menu-text">Kategori</span>
-                        </a>
-                    </li>
+                    @can('admin-access')
+                        <li class="nk-menu-heading">
+                            <h6 class="overline-title text-primary-alt">Admin</h6>
+                        </li>
+                        <li class="nk-menu-item has-sub">
+                            <a href="{{ route('books.all') }}" class="nk-menu-link">
+                                <span class="nk-menu-icon"><em class="icon ni ni-book"></em></span>
+                                <span class="nk-menu-text">Semua Buku</span>
+                            </a>
+                        </li>
+                        <li class="nk-menu-item has-sub">
+                            <a href="{{ route('categories.index') }}" class="nk-menu-link">
+                                <span class="nk-menu-icon"><em class="icon ni ni-folders"></em></span>
+                                <span class="nk-menu-text">Kategori</span>
+                            </a>
+                        </li>
+                    @endcan
                 </ul>
             </div>
         </div>
