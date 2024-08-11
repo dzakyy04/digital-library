@@ -209,7 +209,7 @@ class BookController extends Controller
     public function getBook($slug)
     {
         try {
-            $book = Book::where('slug', $slug)->firstOrFail();
+            $book = Book::where('slug', $slug)->with(['category', 'user'])->firstOrFail();
             if (Auth::id() !== $book->user_id) {
                 return response()->json([
                     'error' => 'Anda tidak memiliki izin untuk melihat buku ini'

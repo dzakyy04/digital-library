@@ -135,6 +135,23 @@
         </div>
     </div>
 
+    {{-- Detail Modal --}}
+    <div class="modal fade" id="showModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detail Buku</h5>
+                    <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <div id="bookDetails"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- Delete Modal --}}
     <div class="modal fade" id="deleteModal">
         <div class="modal-dialog" role="document">
@@ -163,17 +180,74 @@
 
 @push('js')
     <script src="{{ asset('assets/js/example-toastr.js?ver=3.0.3') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/id.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Handle delete
-            $('.delete-button').click(function() {
-                var slug = $(this).data('slug');
+            // Handle show
+            $('.show-button').click(function() {
+                let slug = $(this).data('slug');
 
                 $.ajax({
                     url: '{{ route('books.find', ':slug') }}'.replace(':slug', slug),
                     type: 'GET',
                     success: function(response) {
-                        var book = response.book;
+                        let book = response.book;
+                        let downloadLink = book.file_path ?
+                            `<a href="{{ route('books.download', ':slug') }}" class="btn btn-primary btn-sm"><em class="icon ni ni-download me-1"></em>Download File</a>`
+                            .replace(':slug', book.slug) :
+                            '<span class="text-muted">Tidak ada file yang tersedia</span>';
+
+                        let detailHtml = `
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <img src="${book.cover_path}" alt="${book.title}" class="img-fluid">
+                    </div>
+                    <div class="col-md-8">
+                        <h4 class="mb-3">${book.title}</h4>
+                        <div class="row mb-2">
+                            <div class="col-sm-4 col-5 fw-bold">Kategori</div>
+                            <div class="col-sm-8 col-7">: ${book.category_id ? book.category.name : '-'}</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-4 col-5 fw-bold">Deskripsi</div>
+                            <div class="col-sm-8 col-7">: ${book.description}</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-4 col-5 fw-bold">Jumlah</div>
+                            <div class="col-sm-8 col-7">: ${book.quantity}</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-4 col-5 fw-bold">Dibuat pada</div>
+                            <div class="col-sm-8 col-7">: ${moment(book.created_at).format('DD MMMM YYYY, HH:mm:ss')}</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-4 col-5 fw-bold">Diperbarui pada</div>
+                            <div class="col-sm-8 col-7">: ${moment(book.updated_at).format('DD MMMM YYYY, HH:mm:ss')}</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-4 col-5 fw-bold">File</div>
+                            <div class="col-sm-8 col-7">: ${downloadLink}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+                        $('#bookDetails').html(detailHtml);
+                        $('#showModal').modal('show');
+                    }
+                });
+            });
+
+
+            // Handle delete
+            $('.delete-button').click(function() {
+                let slug = $(this).data('slug');
+
+                $.ajax({
+                    url: '{{ route('books.find', ':slug') }}'.replace(':slug', slug),
+                    type: 'GET',
+                    success: function(response) {
+                        let book = response.book;
 
                         $('#deleteModal').modal('show');
                         $('#deleteForm').attr('action',
