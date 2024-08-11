@@ -130,6 +130,7 @@ class BookController extends Controller
     {
         $title = 'Edit Buku';
         $book = Book::where('slug', $slug)->firstOrFail();
+        session(['books_previous_url' => url()->previous()]);
         if (Auth::id() !== $book->user_id && Auth::user()->role != 'admin') {
             return redirect()->route('books.index')->with('error', 'Anda tidak memiliki izin untuk mengedit buku ini');
         }
@@ -143,7 +144,7 @@ class BookController extends Controller
             $book = Book::where('slug', $slug)->firstOrFail();
 
             if (Auth::id() !== $book->user_id && Auth::user()->role != 'admin') {
-                return redirect()->route('books.index')->with('error', 'Anda tidak memiliki izin untuk mengedit buku ini');
+                return $this->redirectBack('error', 'Anda tidak memiliki izin untuk mengedit buku ini');
             }
 
             $validatedData = $request->validate([
@@ -176,13 +177,13 @@ class BookController extends Controller
 
             $book->update($validatedData);
 
-            return redirect()->route('books.index')->with('success', 'Buku berhasil diperbarui');
+            return $this->redirectBack('success', 'Buku berhasil diperbarui');
         } catch (ValidationException $e) {
             return back()->withErrors($e->errors())
                 ->with('error', 'Terjadi kesalahan dalam validasi. Silakan periksa data yang Anda masukkan')
                 ->withInput();
         } catch (Exception $e) {
-            return redirect()->route('books.edit', $slug)->with('error', 'Terjadi kesalahan saat memperbarui buku');
+            return $this->redirectBack('error', 'Terjadi kesalahan saat memperbarui buku');
         }
     }
 
@@ -190,26 +191,21 @@ class BookController extends Controller
     {
         try {
             $book = Book::where('slug', $slug)->firstOrFail();
-
             if (Auth::id() !== $book->user_id && Auth::user()->role != 'admin') {
-                return redirect()->route('books.index')->with('error', 'Anda tidak memiliki izin untuk menghapus buku ini');
+                return $this->redirectBack('error', 'Anda tidak memiliki izin untuk menghapus buku ini');
             }
-
             if ($book->file_path) {
                 Storage::disk('public')->delete('books/files/' . basename($book->file_path));
             }
-
             if ($book->cover_path) {
                 Storage::disk('public')->delete('books/covers/' . basename($book->cover_path));
             }
-
             $book->delete();
-
-            return redirect()->route('books.index')->with('success', 'Buku berhasil dihapus');
+            return $this->redirectBack('success', 'Buku berhasil dihapus');
         } catch (ModelNotFoundException $e) {
-            return redirect()->route('books.index')->with('error', 'Buku tidak ditemukan');
+            return $this->redirectBack('error', 'Buku tidak ditemukan');
         } catch (Exception $e) {
-            return redirect()->route('books.index')->with('error', 'Terjadi kesalahan saat menghapus buku');
+            return $this->redirectBack('error', 'Terjadi kesalahan saat menghapus buku');
         }
     }
 
@@ -268,5 +264,16 @@ class BookController extends Controller
         }
 
         return $slug;
+    }
+
+    private function redirectBack($type, $message)
+    {
+        $previousUrl = session('books_previous_url', url()->previous());
+        session()->forget('books_previous_url');
+
+        if ($previousUrl === route('books.all')) {
+            return redirect()->route('books.all')->with($type, $message);
+        }
+        return redirect()->route('books.index')->with($type, $message);
     }
 }

@@ -248,6 +248,21 @@
                 $('#deleteText').text('Apakah Anda yakin ingin menghapus buku ini?');
                 $('#deleteModal').modal('show');
             });
+
+            // Toastr
+            @if (session()->has('success'))
+                let message = @json(session('success'));
+                NioApp.Toast(`<h5>Berhasil</h5><p>${message}</p>`, 'success', {
+                    position: 'top-right',
+                });
+            @endif
+
+            @if (session()->has('error'))
+                let message = @json(session('error'));
+                NioApp.Toast(`<h5>Gagal</h5><p>${message}</p>`, 'error', {
+                    position: 'top-right',
+                });
+            @endif
         });
     </script>
 @endpush
