@@ -48,6 +48,38 @@ class BookController extends Controller
         }
     }
 
+    public function all(Request $request)
+    {
+        try {
+            $title = 'Daftar Buku';
+
+            $selectedCategories = $request->input('kategori', []);
+            $query = Book::with(['category', 'user']);
+
+            if (!empty($selectedCategories)) {
+                $query->where(function ($q) use ($selectedCategories) {
+                    foreach ($selectedCategories as $category) {
+                        if ($category === '-') {
+                            $q->orWhereNull('category_id');
+                        } else {
+                            $categoryId = Category::where('slug', $category)->value('id');
+                            if ($categoryId) {
+                                $q->orWhere('category_id', $categoryId);
+                            }
+                        }
+                    }
+                });
+            }
+
+            $books = $query->get();
+            $categories = Category::orderBy('name')->get();
+
+            return view('dashboard.books.all', compact('title', 'books', 'categories', 'selectedCategories'));
+        } catch (Exception $e) {
+            return redirect()->route('books.all')->with('error', 'Terjadi kesalahan saat mengambil daftar buku');
+        }
+    }
+
     public function create()
     {
         $title = 'Tambah Buku Baru';
@@ -98,7 +130,7 @@ class BookController extends Controller
     {
         $title = 'Edit Buku';
         $book = Book::where('slug', $slug)->firstOrFail();
-        if (Auth::id() !== $book->user_id) {
+        if (Auth::id() !== $book->user_id && Auth::user()->role != 'admin') {
             return redirect()->route('books.index')->with('error', 'Anda tidak memiliki izin untuk mengedit buku ini');
         }
         $categories = Category::orderBy('name')->get();
@@ -110,7 +142,7 @@ class BookController extends Controller
         try {
             $book = Book::where('slug', $slug)->firstOrFail();
 
-            if (Auth::id() !== $book->user_id) {
+            if (Auth::id() !== $book->user_id && Auth::user()->role != 'admin') {
                 return redirect()->route('books.index')->with('error', 'Anda tidak memiliki izin untuk mengedit buku ini');
             }
 
@@ -159,7 +191,7 @@ class BookController extends Controller
         try {
             $book = Book::where('slug', $slug)->firstOrFail();
 
-            if (Auth::id() !== $book->user_id) {
+            if (Auth::id() !== $book->user_id && Auth::user()->role != 'admin') {
                 return redirect()->route('books.index')->with('error', 'Anda tidak memiliki izin untuk menghapus buku ini');
             }
 
@@ -186,7 +218,7 @@ class BookController extends Controller
         try {
             $book = Book::where('slug', $slug)->firstOrFail();
 
-            if (Auth::id() !== $book->user_id) {
+            if (Auth::id() !== $book->user_id && Auth::user()->role != 'admin') {
                 return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk mengunduh buku ini');
             }
 
@@ -210,7 +242,7 @@ class BookController extends Controller
     {
         try {
             $book = Book::where('slug', $slug)->with(['category', 'user'])->firstOrFail();
-            if (Auth::id() !== $book->user_id) {
+            if (Auth::id() !== $book->user_id && Auth::user()->role != 'admin') {
                 return response()->json([
                     'error' => 'Anda tidak memiliki izin untuk melihat buku ini'
                 ], 403);

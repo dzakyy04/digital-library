@@ -48,6 +48,7 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::get('/kategori/{slug}', [CategoryController::class, 'getCategory'])->name('categories.find');
     // Book routes
     Route::get('/buku', [BookController::class, 'index'])->name('books.index');
+    Route::get('/semua-buku', [BookController::class, 'all'])->name('books.all');
     Route::get('/buku/{slug}/download', [BookController::class, 'download'])->name('books.download');
     Route::get('/buku/tambah', [BookController::class, 'create'])->name('books.create');
     Route::post('/buku/tambah', [BookController::class, 'store'])->name('books.store');
@@ -56,6 +57,9 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::delete('/buku/{slug}', [BookController::class, 'destroy'])->name('books.destroy');
     Route::get('/buku/{slug}', [BookController::class, 'getBook'])->name('books.find');
     Route::get('/buku/export/pdf', [BookExportController::class, 'exportMyBookPdf'])->name('books.export.pdf');
-    Route::get('/buku/export/pdf-table', [BookExportController::class, 'exportMyBookPdfTable'])->name('books.export.pdf.table');
-    Route::get('/buku/export/excel', [BookExportController::class, 'exportMyBookExcel'])->name('books.export.excel');
+    Route::get('/buku/export/pdf/semua', [BookExportController::class, 'exportAllBooksPdf'])->name('books.export.all.pdf');
+    Route::get('/buku/export/pdf-table', [BookExportController::class, 'exportMyBooksPdfTable'])->name('books.export.pdf.table');
+    Route::get('/buku/export/pdf-table/semua', [BookExportController::class, 'exportAllBooksPdfTable'])->name('books.export.all.pdf.table');
+    Route::get('/buku/export/excel', [BookExportController::class, 'exportMyBooksExcel'])->name('books.export.excel');
+    Route::get('/buku/export/excel/semua', [BookExportController::class, 'exportAllBooksExcel'])->name('books.export.all.excel');
 });
