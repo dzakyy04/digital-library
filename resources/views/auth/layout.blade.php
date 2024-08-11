@@ -54,12 +54,12 @@
     <script>
         $(document).ready(function() {
             $("#btnSubmit").on("click", function() {
-                var $btn = $(this);
-                var $form = $btn.closest("form");
+                let $btn = $(this);
+                let $form = $btn.closest("form");
                 if ($form[0].checkValidity()) {
                     $btn.addClass("disabled");
 
-                    var spinner = $("<span/>", {
+                    let spinner = $("<span/>", {
                         "class": "spinner-border spinner-border-sm",
                         "role": "status",
                         "aria-hidden": "true"

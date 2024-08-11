@@ -18,8 +18,8 @@
         $(document).ready(function() {
             // Handle slug
             $('#name').on('input', function() {
-                var name = $(this).val();
-                var slug = name.toLowerCase().replace(/\s+/g, '-');
+                let name = $(this).val();
+                let slug = name.toLowerCase().replace(/\s+/g, '-');
 
                 $.ajax({
                     url: '{{ route('categories.checkSlug') }}',
@@ -38,13 +38,13 @@
 
             // Handle edit
             $('.edit-button').on('click', function() {
-                var slug = $(this).data('slug');
+                let slug = $(this).data('slug');
 
                 $.ajax({
                     url: '{{ route('categories.find', ':slug') }}'.replace(':slug', slug),
                     type: 'GET',
                     success: function(response) {
-                        var category = response.category;
+                        let category = response.category;
 
                         $('#edit_name').val(category.name);
                         $('#edit_slug').val(category.slug);
@@ -59,13 +59,13 @@
             });
 
             $('.delete-button').click(function() {
-                var slug = $(this).data('slug');
+                let slug = $(this).data('slug');
 
                 $.ajax({
                     url: '{{ route('categories.find', ':slug') }}'.replace(':slug', slug),
                     type: 'GET',
                     success: function(response) {
-                        var category = response.category;
+                        let category = response.category;
 
                         $('#deleteModal').modal('show');
                         $('#deleteForm').attr('action',

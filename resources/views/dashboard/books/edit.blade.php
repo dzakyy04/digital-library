@@ -134,25 +134,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <script>
         function previewPDF(event) {
-            var file = event.target.files[0];
-            var canvas = document.getElementById('pdf-preview');
-            var context = canvas.getContext('2d');
+            let file = event.target.files[0];
+            let canvas = document.getElementById('pdf-preview');
+            let context = canvas.getContext('2d');
 
             if (file && file.type === 'application/pdf') {
-                var reader = new FileReader();
+                let reader = new FileReader();
                 reader.onload = function(e) {
-                    var loadingTask = pdfjsLib.getDocument({
+                    let loadingTask = pdfjsLib.getDocument({
                         data: e.target.result
                     });
                     loadingTask.promise.then(function(pdf) {
                         pdf.getPage(1).then(function(page) {
-                            var viewport = page.getViewport({
+                            let viewport = page.getViewport({
                                 scale: 1
                             });
                             canvas.height = viewport.height;
                             canvas.width = viewport.width;
 
-                            var renderContext = {
+                            let renderContext = {
                                 canvasContext: context,
                                 viewport: viewport
                             };
@@ -169,10 +169,10 @@
         }
 
         function previewCover(event) {
-            var input = event.target;
-            var preview = document.getElementById('cover-preview');
-            var file = input.files[0];
-            var reader = new FileReader();
+            let input = event.target;
+            let preview = document.getElementById('cover-preview');
+            let file = input.files[0];
+            let reader = new FileReader();
 
             reader.onload = function(e) {
                 preview.src = e.target.result;
