@@ -42,6 +42,10 @@
         <div class="form-group">
             <div class="form-label-group">
                 <label class="form-label" for="password">Password</label>
+                <div class="card-tools">
+                    <em class="card-hint icon ni ni-help" data-bs-toggle="tooltip" data-bs-placement="left"
+                        title="Minimum 8 karakter, kombinasi huruf besar dan kecil, memiliki angka dan simbol"></em>
+                </div>
             </div>
             <div class="form-control-wrap">
                 <a href="#" class="form-icon form-icon-right passcode-switch lg" data-target="password">
