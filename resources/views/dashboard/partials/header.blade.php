@@ -41,12 +41,6 @@
                             <div class="dropdown-inner">
                                 <ul class="link-list">
                                     <li>
-                                        <a href="#">
-                                            <em class="icon ni ni-edit"></em>
-                                            <span>Ganti Password</span>
-                                        </a>
-                                    </li>
-                                    <li>
                                         <a class="dark-switch" href="#">
                                             <em class="icon ni ni-moon"></em>
                                             <span>Mode Gelap</span>

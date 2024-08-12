@@ -7,6 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- Page Title  -->
     <title>{{ config('app.name') }} | {{ $title }}</title>
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('assets/images/logo-light.png') }}" type="image/x-icon">
     <!-- StyleSheets  -->
     <link rel="stylesheet" href=" {{ asset('/assets/css/dashlite.css') }}">
     @stack('css')
