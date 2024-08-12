@@ -104,7 +104,7 @@
                     </a>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('books.index') }}" method="GET">
+                    <form action="{{ route('books.all') }}" method="GET">
                         <div class="form-group">
                             <label class="fw-bold">Kategori</label>
                             <div class="form-check mt-1">
